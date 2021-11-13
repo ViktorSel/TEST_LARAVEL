@@ -1,0 +1,73 @@
+version: "3.7"
+services:
+
+  landing:
+    build:
+      args:
+        user: 1000
+        uid: 1000
+        dir: landing
+      context: ./
+      dockerfile: Dockerfile
+    image: landing
+    restart: unless-stopped
+    working_dir: /var/www/landing
+    volumes:
+      - ./landing:/var/www/landing
+    networks:
+      - testnetwork
+  
+  activity:
+    build:
+      args:
+        user: 1000
+        uid: 1000
+        dir: activity
+      context: ./
+      dockerfile: Dockerfile
+    image: activity
+    restart: unless-stopped
+    working_dir: /var/www/activity
+    volumes:
+      - ./activity:/var/www/activity
+    networks:
+      - testnetwork
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - 8001:81
+      - 8002:82
+    volumes:
+      - ./landing:/var/www/landing
+      - ./activity:/var/www/activity
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+    networks:
+      - testnetwork
+
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: TestLaravel
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - testnetwork
+  
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - testnetwork
+
+networks:
+  testnetwork:
+    driver: bridge

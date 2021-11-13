@@ -1,0 +1,13 @@
+#INSTALL AND RUN APPLICATION
+1. docker-compose build
+2. docker-compose up -d
+# 3. docker-compose exec app composer create-project laravel/laravel --prefer-dist application
+# 4. docker-compose exec app composer require laravel/ui --dev \
+# 5. docker-compose exec app php artisan ui bootstrap --auth \
+# 6. ./landing npm install && npm run dev
+
+7. IN_DOCKER php artisan config:cache
+8. IN_DOCKER php artisan migrate
+9. IN_DOCKER php artisan db:seed
+
+   
